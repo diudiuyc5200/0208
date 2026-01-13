@@ -15,6 +15,7 @@
 /*-*************************************
 *  Dependencies
 ***************************************/
+#include "../common/allocations.h"  /* ZSTD_customMalloc, ZSTD_customFree */
 #include "../common/zstd_internal.h"
 #include "../common/portability_macros.h"
 #include "../common/compiler.h" /* ZS2_isPower2 */
@@ -251,7 +252,7 @@ MEM_STATIC size_t ZSTD_cwksp_bytes_to_align_ptr(void* ptr, const size_t alignByt
     return bytes;
 }
 
-/**
+/*
  * Returns the initial value for allocStart which is used to determine the position from
  * which we can allocate from the end of the workspace.
  */
@@ -263,7 +264,7 @@ MEM_STATIC void*  ZSTD_cwksp_initialAllocStart(ZSTD_cwksp* ws)
     return (void*)endPtr;
 }
 
-/**
+/*
  * Internal function. Do not use directly.
  * Reserves the given number of bytes within the aligned/buffer segment of the wksp,
  * which counts from the end of the wksp (as opposed to the object/table segment).
@@ -390,7 +391,7 @@ MEM_STATIC void* ZSTD_cwksp_reserve_aligned_init_once(ZSTD_cwksp* ws, size_t byt
     return ptr;
 }
 
-/**
+/*
  * Reserves and returns memory sized on and aligned on ZSTD_CWKSP_ALIGNMENT_BYTES (64 bytes).
  */
 MEM_STATIC void* ZSTD_cwksp_reserve_aligned64(ZSTD_cwksp* ws, size_t bytes)
@@ -492,6 +493,7 @@ MEM_STATIC void ZSTD_cwksp_mark_tables_dirty(ZSTD_cwksp* ws)
 {
     DEBUGLOG(4, "cwksp: ZSTD_cwksp_mark_tables_dirty");
 
+
     assert(ws->tableValidEnd >= ws->objectEnd);
     assert(ws->tableValidEnd <= ws->allocStart);
     ws->tableValidEnd = ws->objectEnd;
@@ -540,6 +542,8 @@ MEM_STATIC void ZSTD_cwksp_clear_tables(ZSTD_cwksp* ws)
  */
 MEM_STATIC void ZSTD_cwksp_clear(ZSTD_cwksp* ws) {
     DEBUGLOG(4, "cwksp: clearing!");
+
+
 
     ws->tableEnd = ws->objectEnd;
     ws->allocStart = ZSTD_cwksp_initialAllocStart(ws);

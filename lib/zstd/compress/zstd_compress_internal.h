@@ -954,7 +954,7 @@ size_t ZSTD_hashPtrSalted(const void* p, U32 hBits, U32 mls, const U64 hashSalt)
 }
 
 
-/** ZSTD_ipow() :
+/* ZSTD_ipow() :
  * Return base^exponent.
  */
 static U64 ZSTD_ipow(U64 base, U64 exponent)

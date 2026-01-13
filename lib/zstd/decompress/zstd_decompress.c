@@ -613,7 +613,7 @@ size_t ZSTD_readSkippableFrame(void* dst, size_t dstCapacity,
     }
 }
 
-/** ZSTD_findDecompressedSize() :
+/* ZSTD_findDecompressedSize() :
  *  `srcSize` must be the exact length of some number of ZSTD compressed and/or
  *      skippable frames
  *  note: compatible with legacy mode

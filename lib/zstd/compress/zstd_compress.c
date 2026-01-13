@@ -12,6 +12,7 @@
 /*-*************************************
 *  Dependencies
 ***************************************/
+#include "../common/allocations.h"  /* ZSTD_customMalloc, ZSTD_customCalloc, ZSTD_customFree */
 #include "../common/zstd_deps.h"  /* INT_MAX, ZSTD_memset, ZSTD_memcpy */
 #include "../common/mem.h"
 #include "../common/error_private.h"
@@ -1175,7 +1176,7 @@ static int ZSTD_dedicatedDictSearch_isSupported(
 static void ZSTD_dedicatedDictSearch_revertCParams(
         ZSTD_compressionParameters* cParams);
 
-/**
+/*
  * Initializes the local dictionary using requested parameters.
  * NOTE: Initialization does not employ the pledged src size,
  * because the dictionary may be used for multiple compressions.
@@ -4856,6 +4857,7 @@ ZSTD_loadDictionaryContent(ZSTD_MatchState_t* ms,
         assert(ZSTD_window_isEmpty(ms->window));
         if (loadLdmDict) assert(ZSTD_window_isEmpty(ls->window));
     }
+    ZSTD_window_update(&ms->window, src, srcSize, /* forceNonContiguous */ 0);
 
     DEBUGLOG(4, "ZSTD_loadDictionaryContent: useRowMatchFinder=%d", (int)params->useRowMatchFinder);
 
@@ -4876,7 +4878,7 @@ ZSTD_loadDictionaryContent(ZSTD_MatchState_t* ms,
         }
     }
 
-    ZSTD_window_update(&ms->window, src, srcSize, /* forceNonContiguous */ 0);
+    ms->nextToUpdate = (U32)(ip - ms->window.base);
     ms->loadedDictEnd = params->forceWindow ? 0 : (U32)(iend - ms->window.base);
     ms->forceNonContiguous = params->deterministicRefPrefix;
 
