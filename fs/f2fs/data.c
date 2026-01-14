@@ -1040,7 +1040,6 @@ static struct bio *f2fs_grab_read_bio(struct inode *inode, block_t blkaddr,
 	bio_set_op_attrs(bio, REQ_OP_READ, op_flag);
 	if (!bio)
 		return ERR_PTR(-ENOMEM);
-
 	bio->bi_iter.bi_sector = sector;
 	bio->bi_end_io = f2fs_read_end_io;
 
@@ -2303,6 +2302,14 @@ skip_reading_dnode:
 		blkaddr = from_dnode ? data_blkaddr(dn.inode, dn.node_page,
 					dn.ofs_in_node + i + 1) :
 					ei.blk + i;
+
+		f2fs_wait_on_block_writeback(inode, blkaddr);
+
+		if (f2fs_load_compressed_page(sbi, page, blkaddr)) {
+			if (atomic_dec_and_test(&dic->remaining_pages))
+				f2fs_decompress_cluster(dic, true);
+			continue;
+		}
 
 		f2fs_wait_on_block_writeback(inode, blkaddr);
 
