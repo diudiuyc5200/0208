@@ -186,15 +186,17 @@ static void update_position(u32 *index, int *offset, struct bio_vec *bvec)
 static inline void update_used_max(struct zram *zram,
 					const unsigned long pages)
 {
-	unsigned long cur_max = atomic_long_read(&zram->stats.max_used_pages);
+	unsigned long cur_max, new_max;
 
-	do {
-		if (cur_max >= pages)
-			return;
-	} while (!atomic_long_try_cmpxchg(&zram->stats.max_used_pages,
-					  &cur_max, pages));
+	cur_max = atomic_long_read(&zram->stats.max_used_pages);
+	while (cur_max < pages) {
+		new_max = cur_max;
+		cur_max = atomic_long_cmpxchg(&zram->stats.max_used_pages,
+					      cur_max, pages);
+		if (cur_max == new_max)
+			break;
+	}
 }
-
 static inline void zram_fill_page(void *ptr, unsigned long len,
 					unsigned long value)
 {
