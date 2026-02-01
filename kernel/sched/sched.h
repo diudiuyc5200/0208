@@ -2864,12 +2864,5 @@ static inline void sched_irq_work_queue(struct irq_work *work)
  *
  * Returns: true if the task is considered a booster task
  */
-static inline bool task_is_booster(struct task_struct *p)
-{
-    if (!p)
-        return false;
-    
-    /* 简单实现：总是返回 false */
-    return false;
-}
+
 #endif

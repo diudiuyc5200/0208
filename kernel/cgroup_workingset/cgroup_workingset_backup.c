@@ -32,11 +32,11 @@ static struct crypto_shash *g_tfm;
 
 void workingset_record_list_init(void)
 {
-	if (totalram_pages() > TOTAL_RAM_PAGES_3G)
+	if (totalram_pages > TOTAL_RAM_PAGES_3G)
 		g_max_records_count = MAX_RECORD_COUNT_ON_4G;
-	else if (totalram_pages() > TOTAL_RAM_PAGES_2G)
+	else if (totalram_pages > TOTAL_RAM_PAGES_2G)
 		g_max_records_count = MAX_RECORD_COUNT_ON_3G;
-	else if (totalram_pages() > TOTAL_RAM_PAGES_1G)
+	else if (totalram_pages > TOTAL_RAM_PAGES_1G)
 		g_max_records_count = MAX_RECORD_COUNT_ON_2G;
 	else
 		g_max_records_count = MAX_RECORD_COUNT_ON_1G;
