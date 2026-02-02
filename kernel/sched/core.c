@@ -4809,7 +4809,7 @@ void sched_set_normal(struct task_struct *p, int nice)
 		.sched_policy = SCHED_NORMAL,
 		.sched_nice = nice,
 	};
-	WARN_ON_ONCE(sched_setattr_nocheck(p, &attr) != 0);
+	WARN_ON_ONCE(sched_setattr(p, &attr) != 0);
 }
 EXPORT_SYMBOL_GPL(sched_set_normal);
 

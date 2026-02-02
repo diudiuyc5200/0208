@@ -19,6 +19,7 @@
 #define trace_sde_perf_crtc_update(...) {}
 #define trace_sde_perf_calc_crtc(...) {}
 #define trace_sde_encoder_underrun(...) {}
+#define trace_sde_evtlog(...) {}
 #define SDE_ATRACE_END(...) {}
 #define SDE_ATRACE_BEGIN(...) {}
 #define SDE_ATRACE_FUNC(...) {}
